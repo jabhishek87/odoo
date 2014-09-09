@@ -7,6 +7,7 @@ from glob import glob
 from setuptools import find_packages, setup
 from os.path import join, dirname
 
+raise SystemExit(0)
 
 execfile(join(dirname(__file__), 'openerp', 'release.py'))  # Load release variables
 lib_name = 'openerp'
