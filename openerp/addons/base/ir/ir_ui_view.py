@@ -46,6 +46,7 @@ from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.view_validation import valid_view
 from openerp.tools import misc
 from openerp.tools.translate import _
+import lxml.etree
 
 _logger = logging.getLogger(__name__)
 
@@ -108,7 +109,7 @@ def _hasclass(context, *cls):
     return node_classes.issuperset(cls)
 
 def get_view_arch_from_file(filename, xmlid):
-    doc = etree.parse(filename)
+    doc = etree.parse(filename, parser=lxml.etree.XMLParser(resolve_entities=False))
     node = None
     for n in doc.xpath('//*[@id="%s"] | //*[@id="%s"]' % (xmlid, xmlid.split('.')[1])):
         if n.tag in ('template', 'record'):
@@ -243,7 +244,7 @@ class view(osv.osv):
         if not self._relaxng_validator:
             frng = tools.file_open(os.path.join('base','rng','view.rng'))
             try:
-                relaxng_doc = etree.parse(frng)
+                relaxng_doc = etree.parse(frng, parser=lxml.etree.XMLParser(resolve_entities=False))
                 self._relaxng_validator = etree.RelaxNG(relaxng_doc)
             except Exception:
                 _logger.exception('Failed to load RelaxNG XML schema for views validation')
@@ -262,7 +263,7 @@ class view(osv.osv):
             view_def = self.read_combined(cr, uid, view.id, None, context=context)
             view_arch_utf8 = view_def['arch']
             if view.type != 'qweb':
-                view_doc = etree.fromstring(view_arch_utf8)
+                view_doc = etree.fromstring(view_arch_utf8, parser=lxml.etree.XMLParser(resolve_entities=False))
                 # verify that all fields used are valid, etc.
                 self.postprocess_and_fields(cr, uid, view.model, view_doc, view.id, context=context)
                 # RNG-based validation is not possible anymore with 7.0 forms
@@ -308,7 +309,7 @@ class view(osv.osv):
             if values.get('inherit_id'):
                 values['type'] = self.browse(cr, uid, values['inherit_id'], context).type
             else:
-                values['type'] = etree.fromstring(values['arch']).tag
+                values['type'] = etree.fromstring(values['arch'], parser=lxml.etree.XMLParser(resolve_entities=False)).tag
 
         if not values.get('name'):
             values['name'] = "%s %s" % (values.get('model'), values['type'])
@@ -559,7 +560,7 @@ class view(osv.osv):
             root_id = source_id
         sql_inherit = self.get_inheriting_views_arch(cr, uid, source_id, model, context=context)
         for (specs, view_id) in sql_inherit:
-            specs_tree = etree.fromstring(specs.encode('utf-8'))
+            specs_tree = etree.fromstring(specs.encode('utf-8'), parser=lxml.etree.XMLParser(resolve_entities=False))
             if context.get('inherit_branding'):
                 self.inherit_branding(specs_tree, view_id, root_id)
             source = self.apply_inheritance_specs(cr, uid, source, specs_tree, view_id, context=context)
@@ -590,13 +591,13 @@ class view(osv.osv):
 
         # read the view arch
         [view] = self.read(cr, uid, [root_id], fields=fields, context=context)
-        view_arch = etree.fromstring(view['arch'].encode('utf-8'))
+        view_arch = etree.fromstring(view['arch'].encode('utf-8'), parser=lxml.etree.XMLParser(resolve_entities=False))
         if not v.inherit_id:
             arch_tree = view_arch
         else:
             parent_view = self.read_combined(
                 cr, uid, v.inherit_id.id, fields=fields, context=context)
-            arch_tree = etree.fromstring(parent_view['arch'])
+            arch_tree = etree.fromstring(parent_view['arch'], parser=lxml.etree.XMLParser(resolve_entities=False))
             self.apply_inheritance_specs(
                 cr, uid, arch_tree, view_arch, parent_view['id'], context=context)
 
@@ -688,7 +689,7 @@ class view(osv.osv):
                     if f.tag == 'field':
                         xml += etree.tostring(f, encoding="utf-8")
                 xml += "</form>"
-                new_xml = etree.fromstring(encode(xml))
+                new_xml = etree.fromstring(encode(xml), parser=lxml.etree.XMLParser(resolve_entities=False))
                 ctx = context.copy()
                 ctx['base_model_name'] = model
                 xarch, xfields = self.postprocess_and_fields(cr, user, node.get('object'), new_xml, view_id, ctx)
@@ -903,7 +904,7 @@ class view(osv.osv):
     @tools.ormcache_context(**_read_template_cache)
     def _read_template(self, cr, uid, view_id, context=None):
         arch = self.read_combined(cr, uid, view_id, fields=['arch'], context=context)['arch']
-        arch_tree = etree.fromstring(arch)
+        arch_tree = etree.fromstring(arch, parser=lxml.etree.XMLParser(resolve_entities=False))
 
         if 'lang' in context:
             arch_tree = self.translate_qweb(cr, uid, view_id, arch_tree, context['lang'], context)

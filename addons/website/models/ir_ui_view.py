@@ -7,6 +7,7 @@ from openerp import SUPERUSER_ID, tools
 from openerp.addons.website.models import website
 from openerp.http import request
 from openerp.osv import osv, fields
+import lxml.etree
 
 class view(osv.osv):
     _inherit = "ir.ui.view"
@@ -61,7 +62,7 @@ class view(osv.osv):
 
         result = [view]
 
-        node = etree.fromstring(view.arch)
+        node = etree.fromstring(view.arch, parser=lxml.etree.XMLParser(resolve_entities=False))
         xpath = "//t[@t-call]"
         if bundles:
             xpath += "| //t[@t-call-assets]"
@@ -122,7 +123,7 @@ class view(osv.osv):
         # not really editable itself, only the content truly is editable.
 
         [view] = self.browse(cr, uid, [view_id], context=context)
-        arch = etree.fromstring(view.arch.encode('utf-8'))
+        arch = etree.fromstring(view.arch.encode('utf-8'), parser=lxml.etree.XMLParser(resolve_entities=False))
         # => get the replacement root
         if not section_xpath:
             root = arch

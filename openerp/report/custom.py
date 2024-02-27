@@ -36,6 +36,7 @@ import misc
 import cStringIO
 from lxml import etree
 from openerp.tools.translate import _
+import lxml.etree
 
 class external_pdf(render.render):
     def __init__(self, pdf):
@@ -330,7 +331,7 @@ class report_custom(report_int):
 
         transform = etree.XSLT(
             etree.parse(os.path.join(tools.config['root_path'],
-                                     'addons/base/report/custom_new.xsl')))
+                                     'addons/base/report/custom_new.xsl'), parser=lxml.etree.XMLParser(resolve_entities=False)))
         rml = etree.tostring(transform(new_doc))
 
         self.obj = render.rml(rml)
@@ -613,7 +614,7 @@ class report_custom(report_int):
 
         transform = etree.XSLT(
             etree.parse(os.path.join(tools.config['root_path'],
-                                     'addons/base/report/custom_new.xsl')))
+                                     'addons/base/report/custom_new.xsl'), parser=lxml.etree.XMLParser(resolve_entities=False)))
         rml = etree.tostring(transform(new_doc))
 
         self.obj = render.rml(rml)

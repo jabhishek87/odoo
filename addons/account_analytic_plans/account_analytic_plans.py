@@ -25,6 +25,7 @@ from lxml import etree
 from openerp.osv import fields, osv
 from openerp import tools
 from openerp.tools.translate import _
+import lxml.etree
 
 class one2many_mod2(fields.one2many):
     def get(self, cr, obj, ids, name, user=None, offset=0, context=None, values=None):
@@ -197,7 +198,7 @@ class account_analytic_plan_instance(osv.osv):
                 <newline/>"""%(i,tools.to_xml(line.name),tools.to_xml(line.name),line.root_analytic_id and line.root_analytic_id.id or 0)
                     i+=1
                 res['arch'] += "</form>"
-                doc = etree.fromstring(res['arch'].encode('utf8'))
+                doc = etree.fromstring(res['arch'].encode('utf8'), parser=lxml.etree.XMLParser(resolve_entities=False))
                 xarch, xfields = self._view_look_dom_arch(cr, uid, doc, view_id, context=context)
                 res['arch'] = xarch
                 res['fields'] = xfields

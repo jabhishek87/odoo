@@ -33,6 +33,7 @@ import urllib
 
 from openerp import SUPERUSER_ID
 from openerp.report.render.rml2pdf import customfonts
+import lxml.etree
 
 #
 # coerce any type to a unicode string (to preserve non-ascii characters)
@@ -160,7 +161,7 @@ class report_rml(report_int):
 
         stylesheet_file = tools.file_open(self.xsl)
         try:
-            stylesheet = etree.parse(stylesheet_file)
+            stylesheet = etree.parse(stylesheet_file, parser=lxml.etree.XMLParser(resolve_entities=False))
             xsl_path, _ = os.path.split(self.xsl)
             for import_child in stylesheet.findall('./import'):
                 if 'href' in import_child.attrib:
@@ -204,7 +205,7 @@ class report_rml(report_int):
 
         transform = etree.XSLT(stylesheet)
         xml = etree.tostring(
-            transform(etree.fromstring(xml)))
+            transform(etree.fromstring(xml, parser=lxml.etree.XMLParser(resolve_entities=False))))
 
         return xml
 

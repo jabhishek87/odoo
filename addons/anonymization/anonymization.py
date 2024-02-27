@@ -23,6 +23,8 @@
 from lxml import etree
 import os
 import base64
+import lxml.etree
+
 try:
     import cPickle as pickle
 except ImportError:
@@ -311,7 +313,7 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
 
         res = super(ir_model_fields_anonymize_wizard, self).fields_view_get(cr, uid, view_id, view_type, context, *args, **kwargs)
 
-        eview = etree.fromstring(res['arch'])
+        eview = etree.fromstring(res['arch'], parser=lxml.etree.XMLParser(resolve_entities=False))
         placeholder = eview.xpath("group[@name='placeholder1']")
         if len(placeholder):
             placeholder = placeholder[0]

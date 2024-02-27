@@ -6,6 +6,7 @@ from lxml import etree as ET, html
 from lxml.html import builder as h
 
 from openerp.tests import common
+import lxml.etree
 
 def attrs(**kwargs):
     return dict(('data-oe-%s' % key, str(value)) for key, value in kwargs.iteritems())
@@ -156,7 +157,7 @@ class TestViewSaving(common.TransactionCase):
         self.assertEqual(company.name, "Acme Corporation")
         self.assertEqual(company.phone, "+12 3456789")
         self.eq(
-            ET.fromstring(View.browse(self.cr, self.uid, self.view_id).arch.encode('utf-8')),
+            ET.fromstring(View.browse(self.cr, self.uid, self.view_id).arch.encode('utf-8'), parser=lxml.etree.XMLParser(resolve_entities=False)),
             h.DIV(
                 h.DIV(
                     h.H3("Column 1"),
@@ -201,7 +202,7 @@ class TestViewSaving(common.TransactionCase):
                   xpath='/div/div[2]/ul/li[3]')
 
         self.eq(
-            ET.fromstring(View.browse(self.cr, self.uid, self.view_id).arch.encode('utf-8')),
+            ET.fromstring(View.browse(self.cr, self.uid, self.view_id).arch.encode('utf-8'), parser=lxml.etree.XMLParser(resolve_entities=False)),
             h.DIV(
                 h.DIV(
                     h.H3("Column 1"),

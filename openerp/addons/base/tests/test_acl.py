@@ -4,6 +4,7 @@ from lxml import etree
 import openerp
 from openerp.tools.misc import mute_logger
 from openerp.tests import common
+import lxml.etree
 
 # test group that demo user should not have
 GROUP_TECHNICAL_FEATURES = 'base.group_no_one'
@@ -42,7 +43,7 @@ class TestACL(common.TransactionCase):
         # Verify the test environment first
         original_fields = self.res_currency.fields_get(self.cr, self.demo_uid, [])
         form_view = self.res_currency.fields_view_get(self.cr, self.demo_uid, False, 'form')
-        view_arch = etree.fromstring(form_view.get('arch'))
+        view_arch = etree.fromstring(form_view.get('arch'), parser=lxml.etree.XMLParser(resolve_entities=False))
         has_tech_feat = self.res_users.has_group(self.cr, self.demo_uid, GROUP_TECHNICAL_FEATURES)
         self.assertFalse(has_tech_feat, "`demo` user should not belong to the restricted group before the test")
         self.assertTrue('accuracy' in original_fields, "'accuracy' field must be properly visible before the test")
@@ -54,7 +55,7 @@ class TestACL(common.TransactionCase):
 
         fields = self.res_currency.fields_get(self.cr, self.demo_uid, [])
         form_view = self.res_currency.fields_view_get(self.cr, self.demo_uid, False, 'form')
-        view_arch = etree.fromstring(form_view.get('arch'))
+        view_arch = etree.fromstring(form_view.get('arch'), parser=lxml.etree.XMLParser(resolve_entities=False))
         self.assertFalse('accuracy' in fields, "'accuracy' field should be gone")
         self.assertEquals(view_arch.xpath("//field[@name='accuracy']"), [],
                           "Field 'accuracy' must not be found in view definition")
@@ -64,7 +65,7 @@ class TestACL(common.TransactionCase):
         has_tech_feat = self.res_users.has_group(self.cr, self.demo_uid, GROUP_TECHNICAL_FEATURES)
         fields = self.res_currency.fields_get(self.cr, self.demo_uid, [])
         form_view = self.res_currency.fields_view_get(self.cr, self.demo_uid, False, 'form')
-        view_arch = etree.fromstring(form_view.get('arch'))
+        view_arch = etree.fromstring(form_view.get('arch'), parser=lxml.etree.XMLParser(resolve_entities=False))
         #import pprint; pprint.pprint(fields); pprint.pprint(form_view)
         self.assertTrue(has_tech_feat, "`demo` user should now belong to the restricted group")
         self.assertTrue('accuracy' in fields, "'accuracy' field must be properly visible again")

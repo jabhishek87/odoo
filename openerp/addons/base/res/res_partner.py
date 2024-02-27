@@ -30,6 +30,7 @@ from openerp import tools, api
 from openerp.osv import osv, fields
 from openerp.osv.expression import get_unaccent_wrapper
 from openerp.tools.translate import _
+import lxml.etree
 
 ADDRESS_FORMAT_LAYOUTS = {
     '%(city)s %(state_code)s\n%(zip)s': """
@@ -64,9 +65,9 @@ class format_address(object):
         fmt = self.env.user.company_id.country_id.address_format or ''
         for k, v in ADDRESS_FORMAT_LAYOUTS.items():
             if k in fmt:
-                doc = etree.fromstring(arch)
+                doc = etree.fromstring(arch, parser=lxml.etree.XMLParser(resolve_entities=False))
                 for node in doc.xpath("//div[@class='address_format']"):
-                    tree = etree.fromstring(v)
+                    tree = etree.fromstring(v, parser=lxml.etree.XMLParser(resolve_entities=False))
                     node.getparent().replace(node, tree)
                 arch = etree.tostring(doc)
                 break

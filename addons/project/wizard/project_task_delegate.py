@@ -24,6 +24,7 @@ from lxml import etree
 from openerp import tools
 from openerp.tools.translate import _
 from openerp.osv import fields, osv
+import lxml.etree
 
 class project_task_delegate(osv.osv_memory):
     _name = 'project.task.delegate'
@@ -98,7 +99,7 @@ class project_task_delegate(osv.osv_memory):
         if tm in ['Hours','Hour']:
             return res
 
-        eview = etree.fromstring(res['arch'])
+        eview = etree.fromstring(res['arch'], parser=lxml.etree.XMLParser(resolve_entities=False))
         def _check_rec(eview):
             if eview.attrib.get('widget','') == 'float_time':
                 eview.set('widget','float')
