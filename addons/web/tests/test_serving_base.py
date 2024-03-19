@@ -1,24 +1,23 @@
 # -*- coding: utf-8 -*-
 
-import random
 import unittest2
 
 from openerp.tools import topological_sort
+import secrets
 
 def sample(population):
-    return random.sample(
-        population,
-            random.randint(0, min(len(population), 5)))
+    return secrets.SystemRandom().sample(population,
+            secrets.SystemRandom().randint(0, min(len(population), 5)))
 
 class TestModulesLoading(unittest2.TestCase):
     def setUp(self):
         self.mods = map(str, range(1000))
     def test_topological_sort(self):
-        random.shuffle(self.mods)
+        secrets.SystemRandom().shuffle(self.mods)
         modules = [
             (k, sample(self.mods[:i]))
             for i, k in enumerate(self.mods)]
-        random.shuffle(modules)
+        secrets.SystemRandom().shuffle(modules)
         ms = dict(modules)
 
         seen = set()

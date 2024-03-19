@@ -20,11 +20,13 @@
 #
 ##############################################################################
 
-import re, time, random
+import re, time
 from openerp import api
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 import logging
+import secrets
+
 _logger = logging.getLogger(__name__)
 
 """
@@ -144,7 +146,7 @@ class account_invoice(osv.osv):
                         reference = '+++%s/%s/%s%02d+++' % (partner_ref_nr[:3], partner_ref_nr[3:], seq, mod)
                 elif algorithm == 'random':
                     if not self.check_bbacomm(reference):
-                        base = random.randint(1, 9999999999)
+                        base = secrets.SystemRandom().randint(1, 9999999999)
                         bbacomm = str(base).rjust(10, '0')
                         base = int(bbacomm)
                         mod = base % 97 or 97

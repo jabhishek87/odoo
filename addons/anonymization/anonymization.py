@@ -23,11 +23,12 @@
 from lxml import etree
 import os
 import base64
+import secrets
+
 try:
     import cPickle as pickle
 except ImportError:
     import pickle
-import random
 import datetime
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
@@ -431,7 +432,7 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
                 elif field_type == 'text':
                     anonymized_value = 'xxx'+sid
                 elif field_type == 'boolean':
-                    anonymized_value = random.choice([True, False])
+                    anonymized_value = secrets.SystemRandom().choice([True, False])
                 elif field_type == 'date':
                     anonymized_value = '2011-11-11'
                 elif field_type == 'datetime':

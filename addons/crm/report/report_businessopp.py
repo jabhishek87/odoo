@@ -20,13 +20,12 @@
 ##############################################################################
 
 import os, time
-
-import random
 import StringIO
 
 from openerp.report.render import render
 from openerp.report.interface import report_int
 from pychart import *
+import secrets
 
 theme.use_color = 1
 
@@ -133,7 +132,7 @@ class report_custom(report_int):
 
         #import pydb; pydb.debugger()
         for k, d in responsible_data.iteritems():
-            fill = fill_style.Plain(bgcolor=color.T(r=random.random(), g=random.random(), b=random.random()))
+            fill = fill_style.Plain(bgcolor=color.T(r=secrets.SystemRandom().random(), g=secrets.SystemRandom().random(), b=secrets.SystemRandom().random()))
             tick = tick_mark.Square(size=6, fill_style=fill)
             ar.add_plot(line_plot.T(label=responsible_names[k], data=d, tick_mark=tick))
 
