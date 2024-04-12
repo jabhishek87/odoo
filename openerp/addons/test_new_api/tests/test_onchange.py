@@ -40,7 +40,7 @@ class TestOnChange(common.TransactionCase):
         }
         self.env.invalidate_all()
         result = self.Message.onchange(values, 'discussion', field_onchange)
-        self.assertLessEqual(set(['name']), set(result['value']))
+        self.assertLessEqual({'name'}, set(result['value']))
         self.assertEqual(result['value']['name'], "[%s] %s" % (discussion.name, USER.name))
 
         values = {
@@ -52,7 +52,7 @@ class TestOnChange(common.TransactionCase):
         }
         self.env.invalidate_all()
         result = self.Message.onchange(values, 'body', field_onchange)
-        self.assertLessEqual(set(['size']), set(result['value']))
+        self.assertLessEqual({'size'}, set(result['value']))
         self.assertEqual(result['value']['size'], len(BODY))
 
     def test_new_onchange_one2many(self):
@@ -121,7 +121,7 @@ class TestOnChange(common.TransactionCase):
         }
         self.env.invalidate_all()
         result = self.Discussion.onchange(values, 'name', field_onchange)
-        self.assertLessEqual(set(['messages']), set(result['value']))
+        self.assertLessEqual({'messages'}, set(result['value']))
         self.assertItemsEqual(result['value']['messages'], [
             (0, 0, {
                 'name': "[%s] %s" % ("Foo", USER.name),
@@ -161,5 +161,5 @@ class TestOnChange(common.TransactionCase):
         self.env.invalidate_all()
         result = discussion.onchange(values, 'moderator', field_onchange)
 
-        self.assertLessEqual(set(['participants']), set(result['value']))
+        self.assertLessEqual({'participants'}, set(result['value']))
         self.assertItemsEqual(result['value']['participants'], participants + [(4, demo.id)])

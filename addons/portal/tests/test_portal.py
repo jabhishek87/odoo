@@ -118,7 +118,7 @@ class test_portal(TestMail):
         # Test: Pigs followers should contain Admin and Bert
         group_pigs = self.mail_group.browse(cr, uid, self.group_pigs_id)
         follower_ids = [follower.id for follower in group_pigs.message_follower_ids]
-        self.assertEqual(set(follower_ids), set([self.partner_admin_id, partner_carine_id]), 'Pigs followers after invite is incorrect')
+        self.assertEqual(set(follower_ids), {self.partner_admin_id, partner_carine_id}, 'Pigs followers after invite is incorrect')
 
         # Test: partner must have been prepared for signup
         partner_carine = self.res_partner.browse(cr, uid, partner_carine_id)
@@ -218,7 +218,7 @@ class test_portal(TestMail):
 
         # Do: Chell search messages: should not see internal notes (comment without subtype)
         msg_ids = self.mail_message.search(cr, self.user_chell_id, [('model', '=', 'mail.group'), ('res_id', '=', group_port_id)])
-        self.assertEqual(set(msg_ids), set([msg1_id, msg2_id, msg3_id]),
+        self.assertEqual(set(msg_ids), {msg1_id, msg2_id, msg3_id},
                         'mail_message: portal user has access to messages he should not read')
 
         # Do: Chell read messages she can read

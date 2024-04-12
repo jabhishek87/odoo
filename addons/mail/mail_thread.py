@@ -1580,7 +1580,7 @@ class mail_thread(osv.AbstractModel):
             private_followers = set([partner.id for partner in parent_message.partner_ids])
             if parent_message.author_id:
                 private_followers.add(parent_message.author_id.id)
-            private_followers -= set([author_id])
+            private_followers -= {author_id}
             partner_ids |= private_followers
 
         # 3. Attachments
@@ -1678,7 +1678,7 @@ class mail_thread(osv.AbstractModel):
         subtype_obj = self.pool.get('mail.message.subtype')
 
         user_pid = self.pool.get('res.users').browse(cr, uid, uid, context=context).partner_id.id
-        if set(partner_ids) == set([user_pid]):
+        if set(partner_ids) == {user_pid}:
             try:
                 self.check_access_rights(cr, uid, 'read')
                 self.check_access_rule(cr, uid, ids, 'read')
@@ -1735,7 +1735,7 @@ class mail_thread(osv.AbstractModel):
         if not partner_ids:
             return True
         user_pid = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
-        if set(partner_ids) == set([user_pid]):
+        if set(partner_ids) == {user_pid}:
             self.check_access_rights(cr, uid, 'read')
             self.check_access_rule(cr, uid, ids, 'read')
         else:

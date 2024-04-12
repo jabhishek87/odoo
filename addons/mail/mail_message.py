@@ -311,7 +311,7 @@ class mail_message(osv.Model):
         attachment_ids = set()
         for key, message in message_tree.iteritems():
             if message.author_id:
-                partner_ids |= set([message.author_id.id])
+                partner_ids |= {message.author_id.id}
             if message.subtype_id and message.notified_partner_ids:  # take notified people of message with a subtype
                 partner_ids |= set([partner.id for partner in message.notified_partner_ids])
             elif not message.subtype_id and message.partner_ids:  # take specified people of message without a subtype (log)
@@ -639,7 +639,7 @@ class mail_message(osv.Model):
             return ids
 
         pid = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context).partner_id.id
-        author_ids, partner_ids, allowed_ids = set([]), set([]), set([])
+        author_ids, partner_ids, allowed_ids = set(), set(), set()
         model_ids = {}
 
         # check read access rights before checking the actual rules on the given ids
@@ -856,7 +856,7 @@ class mail_message(osv.Model):
         """
         notification_obj = self.pool.get('mail.notification')
         message = self.browse(cr, uid, newid, context=context)
-        partners_to_notify = set([])
+        partners_to_notify = set()
 
         # all followers of the mail.message document have to be added as partners and notified if a subtype is defined (otherwise: log message)
         if message.subtype_id and message.model and message.res_id:
@@ -873,9 +873,9 @@ class mail_message(osv.Model):
             )
         # remove me from notified partners, unless the message is written on my own wall
         if message.subtype_id and message.author_id and message.model == "res.partner" and message.res_id == message.author_id.id:
-            partners_to_notify |= set([message.author_id.id])
+            partners_to_notify |= {message.author_id.id}
         elif message.author_id:
-            partners_to_notify -= set([message.author_id.id])
+            partners_to_notify -= {message.author_id.id}
 
         # all partner_ids of the mail.message have to be notified regardless of the above (even the author if explicitly added!)
         if message.partner_ids:

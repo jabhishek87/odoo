@@ -62,7 +62,7 @@ class TestPortalIssue(TestPortalProjectBase):
         # Do: Alfred reads project -> ok (employee ok public)
         # Test: all project issues visible
         issue_ids = self.project_issue.search(cr, self.user_projectuser_id, [('project_id', '=', pigs_id)])
-        test_issue_ids = set([self.issue_1_id, self.issue_2_id, self.issue_3_id, self.issue_4_id, self.issue_5_id, self.issue_6_id])
+        test_issue_ids = {self.issue_1_id, self.issue_2_id, self.issue_3_id, self.issue_4_id, self.issue_5_id, self.issue_6_id}
         self.assertEqual(set(issue_ids), test_issue_ids,
                          'access rights: project user cannot see all issues of a public project')
         # Test: all project issues readable
@@ -115,7 +115,7 @@ class TestPortalIssue(TestPortalProjectBase):
         # Do: Chell reads project -> ok (portal ok public)
         # Test: only followed project issues visible + assigned
         issue_ids = self.project_issue.search(cr, self.user_portal_id, [('project_id', '=', pigs_id)])
-        test_issue_ids = set([self.issue_1_id, self.issue_3_id, self.issue_5_id])
+        test_issue_ids = {self.issue_1_id, self.issue_3_id, self.issue_5_id}
         self.assertEqual(set(issue_ids), test_issue_ids,
                          'access rights: portal user should see the followed issues of a portal project')
 
@@ -130,7 +130,7 @@ class TestPortalIssue(TestPortalProjectBase):
         # Do: Alfred reads project -> ok (employee ok employee)
         # Test: all project issues visible
         issue_ids = self.project_issue.search(cr, self.user_projectuser_id, [('project_id', '=', pigs_id)])
-        test_issue_ids = set([self.issue_1_id, self.issue_2_id, self.issue_3_id, self.issue_4_id, self.issue_5_id, self.issue_6_id])
+        test_issue_ids = {self.issue_1_id, self.issue_2_id, self.issue_3_id, self.issue_4_id, self.issue_5_id, self.issue_6_id}
         self.assertEqual(set(issue_ids), test_issue_ids,
                          'access rights: project user cannot see all issues of an employees project')
 
@@ -147,14 +147,14 @@ class TestPortalIssue(TestPortalProjectBase):
         # Do: Alfred reads project -> ko (employee ko followers)
         # Test: no project issue visible
         issue_ids = self.project_issue.search(cr, self.user_projectuser_id, [('project_id', '=', pigs_id)])
-        test_issue_ids = set([self.issue_4_id])
+        test_issue_ids = {self.issue_4_id}
         self.assertEqual(set(issue_ids), test_issue_ids,
                          'access rights: employee user should not see issues of a not-followed followers project, only assigned')
 
         # Do: Chell reads project -> ko (portal ko employee)
         # Test: no project issue visible
         issue_ids = self.project_issue.search(cr, self.user_portal_id, [('project_id', '=', pigs_id)])
-        test_issue_ids = set([self.issue_5_id])
+        test_issue_ids = {self.issue_5_id}
         self.assertEqual(set(issue_ids), test_issue_ids,
                          'access rights: portal user should not see issues of a not-followed followers project, only assigned')
 
@@ -165,13 +165,13 @@ class TestPortalIssue(TestPortalProjectBase):
         # Do: Alfred reads project -> ok (follower ok followers)
         # Test: followed + assigned issues visible
         issue_ids = self.project_issue.search(cr, self.user_projectuser_id, [('project_id', '=', pigs_id)])
-        test_issue_ids = set([self.issue_1_id, self.issue_3_id, self.issue_4_id])
+        test_issue_ids = {self.issue_1_id, self.issue_3_id, self.issue_4_id}
         self.assertEqual(set(issue_ids), test_issue_ids,
                          'access rights: employee user should not see followed + assigned issues of a follower project')
 
         # Do: Chell reads project -> ok (follower ok follower)
         # Test: followed + assigned issues visible
         issue_ids = self.project_issue.search(cr, self.user_portal_id, [('project_id', '=', pigs_id)])
-        test_issue_ids = set([self.issue_1_id, self.issue_3_id, self.issue_5_id])
+        test_issue_ids = {self.issue_1_id, self.issue_3_id, self.issue_5_id}
         self.assertEqual(set(issue_ids), test_issue_ids,
                          'access rights: employee user should not see followed + assigned issues of a follower project')

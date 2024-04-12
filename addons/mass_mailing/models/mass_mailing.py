@@ -602,7 +602,7 @@ class MassMailing(osv.Model):
             if mailing.mass_mailing_campaign_id and mailing.mass_mailing_campaign_id.unique_ab_testing:
                 already_mailed = self.pool['mail.mass_mailing.campaign'].get_recipients(cr, uid, [mailing.mass_mailing_campaign_id.id], context=context)[mailing.mass_mailing_campaign_id.id]
             else:
-                already_mailed = set([])
+                already_mailed = set()
             remaining = set(res_ids).difference(already_mailed)
             if topick > len(remaining):
                 topick = len(remaining)

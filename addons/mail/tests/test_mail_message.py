@@ -185,16 +185,16 @@ class TestMailMessage(TestMail):
 
         # Test: Bert: 2 messages that have Bert in partner_ids
         msg_ids = self.mail_message.search(cr, self.user_bert_id, [('subject', 'like', '_Test')])
-        self.assertEqual(set([msg_id2, msg_id4]), set(msg_ids), 'mail_message search failed')
+        self.assertEqual({msg_id2, msg_id4}, set(msg_ids), 'mail_message search failed')
         # Test: Raoul: 3 messages on Pigs Raoul can read (employee can read group with default values), 0 on Birds (private group)
         msg_ids = self.mail_message.search(cr, self.user_raoul_id, [('subject', 'like', '_Test'), ('body', 'like', 'A')])
-        self.assertEqual(set([msg_id3, msg_id4, msg_id5]), set(msg_ids), 'mail_message search failed')
+        self.assertEqual({msg_id3, msg_id4, msg_id5}, set(msg_ids), 'mail_message search failed')
         # Test: Raoul: 3 messages on Pigs Raoul can read (employee can read group with default values), 0 on Birds (private group) + 2 messages as author
         msg_ids = self.mail_message.search(cr, self.user_raoul_id, [('subject', 'like', '_Test')])
-        self.assertEqual(set([msg_id3, msg_id4, msg_id5, msg_id7, msg_id8]), set(msg_ids), 'mail_message search failed')
+        self.assertEqual({msg_id3, msg_id4, msg_id5, msg_id7, msg_id8}, set(msg_ids), 'mail_message search failed')
         # Test: Admin: all messages
         msg_ids = self.mail_message.search(cr, uid, [('subject', 'like', '_Test')])
-        self.assertEqual(set([msg_id1, msg_id2, msg_id3, msg_id4, msg_id5, msg_id6, msg_id7, msg_id8]), set(msg_ids), 'mail_message search failed')
+        self.assertEqual({msg_id1, msg_id2, msg_id3, msg_id4, msg_id5, msg_id6, msg_id7, msg_id8}, set(msg_ids), 'mail_message search failed')
 
     @mute_logger('openerp.addons.base.ir.ir_model', 'openerp.models')
     def test_15_mail_message_check_access_rule(self):
@@ -369,19 +369,19 @@ class TestMailMessage(TestMail):
         self.mail_message.vote_toggle(cr, uid, [msg.id])
         msg.refresh()
         # Test: msg has Admin as voter
-        self.assertEqual(set(msg.vote_user_ids), set([self.user_admin]), 'mail_message vote: after voting, Admin should be in the voter')
+        self.assertEqual(set(msg.vote_user_ids), {self.user_admin}, 'mail_message vote: after voting, Admin should be in the voter')
         # Do: Bert vote for msg
         self.mail_message.vote_toggle(cr, self.user_raoul_id, [msg.id])
         msg_raoul.refresh()
         # Test: msg has Admin and Bert as voters
-        self.assertEqual(set(msg_raoul.vote_user_ids), set([self.user_admin, self.user_raoul]), 'mail_message vote: after voting, Admin and Bert should be in the voters')
+        self.assertEqual(set(msg_raoul.vote_user_ids), {self.user_admin, self.user_raoul}, 'mail_message vote: after voting, Admin and Bert should be in the voters')
         # Do: Admin unvote for msg
         self.mail_message.vote_toggle(cr, uid, [msg.id])
         msg.refresh()
         msg_raoul.refresh()
         # Test: msg has Bert as voter
-        self.assertEqual(set(msg.vote_user_ids), set([self.user_raoul]), 'mail_message vote: after unvoting, Bert should be in the voter')
-        self.assertEqual(set(msg_raoul.vote_user_ids), set([self.user_raoul]), 'mail_message vote: after unvoting, Bert should be in the voter')
+        self.assertEqual(set(msg.vote_user_ids), {self.user_raoul}, 'mail_message vote: after unvoting, Bert should be in the voter')
+        self.assertEqual(set(msg_raoul.vote_user_ids), {self.user_raoul}, 'mail_message vote: after unvoting, Bert should be in the voter')
 
     @mute_logger('openerp.addons.base.ir.ir_model', 'openerp.models')
     def test_50_mail_flow_access_rights(self):

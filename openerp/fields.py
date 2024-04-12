@@ -500,7 +500,7 @@ class Field(object):
 
         if head == '*':
             # special case: add triggers on all fields of model (except self)
-            fields = set(model._fields.itervalues()) - set([self])
+            fields = set(model._fields.itervalues()) - {self}
         else:
             fields = [model._fields[head]]
 

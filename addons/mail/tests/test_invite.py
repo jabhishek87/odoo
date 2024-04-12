@@ -37,7 +37,7 @@ class test_invite(TestMail):
         # Test: Pigs followers should contain Admin, Bert
         self.group_pigs.refresh()
         follower_ids = [follower.id for follower in self.group_pigs.message_follower_ids]
-        self.assertEqual(set(follower_ids), set([self.partner_admin_id, self.partner_bert_id]), 'invite: Pigs followers after invite is incorrect')
+        self.assertEqual(set(follower_ids), {self.partner_admin_id, self.partner_bert_id}, 'invite: Pigs followers after invite is incorrect')
 
         # Test: (pretend to) send email and check subject, body
         self.assertEqual(len(self._build_email_kwargs_list), 1, 'sent email number incorrect, should be only for Bert')

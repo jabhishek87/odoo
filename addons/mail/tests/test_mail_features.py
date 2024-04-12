@@ -61,32 +61,32 @@ class test_mail(TestMail):
 
         # Pigs just created: should be only Admin as follower
         follower_ids = set([follower.id for follower in group_pigs.message_follower_ids])
-        self.assertEqual(follower_ids, set([user_admin.partner_id.id]), 'Admin should be the only Pigs fan')
+        self.assertEqual(follower_ids, {user_admin.partner_id.id}, 'Admin should be the only Pigs fan')
 
         # Subscribe Bert through a '4' command
         group_pigs.write({'message_follower_ids': [(4, partner_bert_id)]})
         group_pigs.refresh()
         follower_ids = set([follower.id for follower in group_pigs.message_follower_ids])
-        self.assertEqual(follower_ids, set([partner_bert_id, user_admin.partner_id.id]), 'Bert and Admin should be the only Pigs fans')
+        self.assertEqual(follower_ids, {partner_bert_id, user_admin.partner_id.id}, 'Bert and Admin should be the only Pigs fans')
 
         # Unsubscribe Bert through a '3' command
         group_pigs.write({'message_follower_ids': [(3, partner_bert_id)]})
         group_pigs.refresh()
         follower_ids = set([follower.id for follower in group_pigs.message_follower_ids])
-        self.assertEqual(follower_ids, set([user_admin.partner_id.id]), 'Admin should be the only Pigs fan')
+        self.assertEqual(follower_ids, {user_admin.partner_id.id}, 'Admin should be the only Pigs fan')
 
         # Set followers through a '6' command
         group_pigs.write({'message_follower_ids': [(6, 0, [partner_bert_id])]})
         group_pigs.refresh()
         follower_ids = set([follower.id for follower in group_pigs.message_follower_ids])
-        self.assertEqual(follower_ids, set([partner_bert_id]), 'Bert should be the only Pigs fan')
+        self.assertEqual(follower_ids, {partner_bert_id}, 'Bert should be the only Pigs fan')
 
         # Add a follower created on the fly through a '0' command
         group_pigs.write({'message_follower_ids': [(0, 0, {'name': 'Patrick Fiori'})]})
         partner_patrick_id = self.res_partner.search(cr, uid, [('name', '=', 'Patrick Fiori')])[0]
         group_pigs.refresh()
         follower_ids = set([follower.id for follower in group_pigs.message_follower_ids])
-        self.assertEqual(follower_ids, set([partner_bert_id, partner_patrick_id]), 'Bert and Patrick should be the only Pigs fans')
+        self.assertEqual(follower_ids, {partner_bert_id, partner_patrick_id}, 'Bert and Patrick should be the only Pigs fans')
 
         # Finally, unlink through a '5' command
         group_pigs.write({'message_follower_ids': [(5, 0)]})
@@ -97,10 +97,10 @@ class test_mail(TestMail):
         # Test dummy data has not been altered
         fol_obj_ids = self.mail_followers.search(cr, uid, [('res_model', '=', 'mail.thread'), ('res_id', '=', self.group_pigs_id)])
         follower_ids = set([follower.partner_id.id for follower in self.mail_followers.browse(cr, uid, fol_obj_ids)])
-        self.assertEqual(follower_ids, set([partner_bert_id]), 'Bert should be the follower of dummy mail.thread data')
+        self.assertEqual(follower_ids, {partner_bert_id}, 'Bert should be the follower of dummy mail.thread data')
         fol_obj_ids = self.mail_followers.search(cr, uid, [('res_model', '=', 'mail.group'), ('res_id', '=', group_dummy_id)])
         follower_ids = set([follower.partner_id.id for follower in self.mail_followers.browse(cr, uid, fol_obj_ids)])
-        self.assertEqual(follower_ids, set([partner_bert_id, user_admin.partner_id.id]), 'Bert and Admin should be the followers of dummy mail.group data')
+        self.assertEqual(follower_ids, {partner_bert_id, user_admin.partner_id.id}, 'Bert and Admin should be the followers of dummy mail.group data')
 
     def test_05_message_followers_and_subtypes(self):
         """ Tests designed for the subscriber API as well as message subtypes """
@@ -122,7 +122,7 @@ class test_mail(TestMail):
         group_pigs.refresh()
         # Test: 2 followers (Admin and Raoul)
         follower_ids = [follower.id for follower in group_pigs.message_follower_ids]
-        self.assertEqual(set(follower_ids), set([user_raoul.partner_id.id, user_admin.partner_id.id]),
+        self.assertEqual(set(follower_ids), {user_raoul.partner_id.id, user_admin.partner_id.id},
                         'message_subscribe: Admin and Raoul should be the only 2 Pigs fans')
         # Raoul follows default subtypes
         fol_ids = self.mail_followers.search(cr, uid, [
@@ -139,7 +139,7 @@ class test_mail(TestMail):
         group_pigs.message_subscribe_users([user_raoul.id], subtype_ids=[mt_mg_nodef])
         # Test: 2 followers (Admin and Raoul)
         follower_ids = [follower.id for follower in group_pigs.message_follower_ids]
-        self.assertEqual(set(follower_ids), set([user_raoul.partner_id.id, user_admin.partner_id.id]),
+        self.assertEqual(set(follower_ids), {user_raoul.partner_id.id, user_admin.partner_id.id},
                         'message_subscribe: Admin and Raoul should be the only 2 Pigs fans')
         # Test: 2 lines in mail.followers (no duplicate for Raoul)
         fol_ids = self.mail_followers.search(cr, uid, [
@@ -156,7 +156,7 @@ class test_mail(TestMail):
                     ])
         fol_obj = self.mail_followers.browse(cr, uid, fol_ids)[0]
         fol_subtype_ids = set([subtype.id for subtype in fol_obj.subtype_ids])
-        self.assertEqual(set(fol_subtype_ids), set([mt_mg_nodef]),
+        self.assertEqual(set(fol_subtype_ids), {mt_mg_nodef},
                         'message_subscribe: Raoul subscription subtypes are incorrect, should be only specified')
 
         # Do: Subscribe Raoul without specified subtypes: should not erase existing subscription subtypes
@@ -165,7 +165,7 @@ class test_mail(TestMail):
         group_pigs.refresh()
         # Test: 2 followers (Admin and Raoul)
         follower_ids = [follower.id for follower in group_pigs.message_follower_ids]
-        self.assertEqual(set(follower_ids), set([user_raoul.partner_id.id, user_admin.partner_id.id]),
+        self.assertEqual(set(follower_ids), {user_raoul.partner_id.id, user_admin.partner_id.id},
                         'message_subscribe: Admin and Raoul should be the only 2 Pigs fans')
         # Test: Raoul follows default subtypes
         fol_ids = self.mail_followers.search(cr, uid, [
@@ -175,7 +175,7 @@ class test_mail(TestMail):
                     ])
         fol_obj = self.mail_followers.browse(cr, uid, fol_ids)[0]
         fol_subtype_ids = set([subtype.id for subtype in fol_obj.subtype_ids])
-        self.assertEqual(set(fol_subtype_ids), set([mt_mg_nodef]),
+        self.assertEqual(set(fol_subtype_ids), {mt_mg_nodef},
                         'message_subscribe: Raoul subscription subtypes are incorrect, should be only specified')
 
         # Do: Unsubscribe Raoul twice through message_unsubscribe_users
@@ -197,14 +197,14 @@ class test_mail(TestMail):
         fol_ids = self.mail_followers.search(cr, uid, [('res_model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id), ('partner_id', '=', user_admin.partner_id.id)])
         fol_obj = self.mail_followers.browse(cr, uid, fol_ids)[0]
         fol_subtype_ids = set([subtype.id for subtype in fol_obj.subtype_ids])
-        self.assertEqual(set(fol_subtype_ids), set([mt_mg_nodef, mt_all_nodef]), 'subscription subtypes are incorrect')
+        self.assertEqual(set(fol_subtype_ids), {mt_mg_nodef, mt_all_nodef}, 'subscription subtypes are incorrect')
 
         # ----------------------------------------
         # CASE2: test mail_thread fields
         # ----------------------------------------
 
         subtype_data = group_pigs._get_subscription_data(None, None)[group_pigs.id]['message_subtype_data']
-        self.assertEqual(set(subtype_data.keys()), set(['Discussions', 'mt_mg_def', 'mt_all_def', 'mt_mg_nodef', 'mt_all_nodef']), 'mail.group available subtypes incorrect')
+        self.assertEqual(set(subtype_data.keys()), {'Discussions', 'mt_mg_def', 'mt_all_def', 'mt_mg_nodef', 'mt_all_nodef'}, 'mail.group available subtypes incorrect')
         self.assertFalse(subtype_data['Discussions']['followed'], 'Admin should not follow Discussions in pigs')
         self.assertTrue(subtype_data['mt_mg_nodef']['followed'], 'Admin should follow mt_mg_nodef in pigs')
         self.assertTrue(subtype_data['mt_all_nodef']['followed'], 'Admin should follow mt_all_nodef in pigs')
@@ -412,12 +412,12 @@ class test_mail(TestMail):
         self.assertEqual(_subject, msg.subject, 'message_post: mail.message subject incorrect')
         self.assertEqual(_body1, msg.body, 'message_post: mail.message body incorrect')
         # Test: mail_message: notified_partner_ids = group followers + partner_ids - author
-        test_pids = set([self.partner_admin_id, p_b_id, p_c_id])
+        test_pids = {self.partner_admin_id, p_b_id, p_c_id}
         self.assertEqual(test_pids, set(msg_pids), 'message_post: mail.message notified partners incorrect')
         # Test: mail_message: attachments (4, attachment_ids + attachments)
-        test_aids = set([attach1_id, attach2_id])
+        test_aids = {attach1_id, attach2_id}
         msg_attach_names = set([attach.name for attach in msg.attachment_ids])
-        test_attach_names = set(['Attach1', 'Attach2', 'List1', 'List2'])
+        test_attach_names = {'Attach1', 'Attach2', 'List1', 'List2'}
         self.assertEqual(len(msg_aids), 4,
                         'message_post: mail.message wrong number of attachments')
         self.assertEqual(msg_attach_names, test_attach_names,
@@ -550,7 +550,7 @@ class test_mail(TestMail):
         # Test: Dédé has been notified -> should also have been notified of the parent message
         msg = self.mail_message.browse(cr, uid, msg1_id)
         msg_pids = set([partner.id for partner in msg.notified_partner_ids])
-        test_pids = set([self.partner_admin_id, p_b_id, p_c_id, p_d_id])
+        test_pids = {self.partner_admin_id, p_b_id, p_c_id, p_d_id}
         self.assertEqual(test_pids, msg_pids, 'message_post: mail.message parent notification not created')
 
          # Do: reply to last message
@@ -693,7 +693,7 @@ class test_mail(TestMail):
         # check mail_mail
         mail_mail_ids = self.mail_mail.search(cr, uid, [('subject', '=', _subject)])
         for mail_mail in self.mail_mail.browse(cr, uid, mail_mail_ids):
-            self.assertEqual(set([p.id for p in mail_mail.recipient_ids]), set([p_c_id, p_d_id]),
+            self.assertEqual(set([p.id for p in mail_mail.recipient_ids]), {p_c_id, p_d_id},
                              'compose wizard: mail_mail mass mailing: mail.mail in mass mail incorrect recipients')
 
         # check logged messages

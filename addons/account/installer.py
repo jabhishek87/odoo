@@ -170,7 +170,7 @@ class account_installer(osv.osv_memory):
         chart = self.read(cr, uid, ids, ['charts'],
                           context=context)[0]['charts']
         _logger.debug('Installing chart of accounts %s', chart)
-        return (modules | set([chart])) - set(['has_default_company', 'configurable'])
+        return (modules | {chart}) - {'has_default_company', 'configurable'}
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

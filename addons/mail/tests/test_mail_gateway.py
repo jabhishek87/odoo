@@ -285,7 +285,7 @@ class TestMailgateway(TestMail):
                       'message_process: message on created group should have have an email_from')
         # Test: author (not recipient and not Raoul (as alias owner)) added as follower
         frog_follower_ids = set([p.id for p in frog_group.message_follower_ids])
-        self.assertEqual(frog_follower_ids, set([p1id]),
+        self.assertEqual(frog_follower_ids, {p1id},
                          'message_process: newly created group should have 1 follower (author, not creator, not recipients)')
         # Test: sent emails: no-one, no bounce effet
         sent_emails = self._build_email_kwargs_list
@@ -317,7 +317,7 @@ class TestMailgateway(TestMail):
                          'message_process: newly created group should have the incoming email in message_ids')
         # Test: author (and not recipient) added as follower
         frog_follower_ids = set([p.id for p in frog_group.message_follower_ids])
-        self.assertEqual(frog_follower_ids, set([p1id]),
+        self.assertEqual(frog_follower_ids, {p1id},
                          'message_process: newly created group should have 1 follower (author, not creator, not recipients)')
         # Test: sent emails: no-one, no bounce effet
         sent_emails = self._build_email_kwargs_list
@@ -391,7 +391,7 @@ class TestMailgateway(TestMail):
         self.assertEqual(len(frog_group.message_ids), 3, 'message_process: group should contain 3 messages after reply')
         # Test: author (and not recipient) added as follower
         frog_follower_ids = set([p.id for p in frog_group.message_follower_ids])
-        self.assertEqual(frog_follower_ids, set([p1id, p2id]),
+        self.assertEqual(frog_follower_ids, {p1id, p2id},
                          'message_process: after reply, group should have 2 followers')
 
         # Do: incoming email with ref holding model / res_id but that does not match any message in the thread: must raise since OpenERP saas-3

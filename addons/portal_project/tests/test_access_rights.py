@@ -91,7 +91,7 @@ class TestPortalProject(TestPortalProjectBase):
         self.project_project.read(cr, self.user_projectuser_id, [pigs_id], ['state'])
         # Test: all project tasks visible
         task_ids = self.project_task.search(cr, self.user_projectuser_id, [('project_id', '=', pigs_id)])
-        test_task_ids = set([self.task_1_id, self.task_2_id, self.task_3_id, self.task_4_id, self.task_5_id, self.task_6_id])
+        test_task_ids = {self.task_1_id, self.task_2_id, self.task_3_id, self.task_4_id, self.task_5_id, self.task_6_id}
         self.assertEqual(set(task_ids), test_task_ids,
                          'access rights: project user cannot see all tasks of a public project')
         # Test: all project tasks readable
@@ -155,7 +155,7 @@ class TestPortalProject(TestPortalProjectBase):
         self.project_project.read(cr, self.user_portal_id, [pigs_id], ['state'])
         # Test: only followed project tasks visible + assigned
         task_ids = self.project_task.search(cr, self.user_portal_id, [('project_id', '=', pigs_id)])
-        test_task_ids = set([self.task_1_id, self.task_3_id, self.task_5_id])
+        test_task_ids = {self.task_1_id, self.task_3_id, self.task_5_id}
         self.assertEqual(set(task_ids), test_task_ids,
                          'access rights: portal user should see the followed tasks of a portal project')
 
@@ -178,7 +178,7 @@ class TestPortalProject(TestPortalProjectBase):
         self.project_project.read(cr, self.user_projectuser_id, [pigs_id], ['state'])
         # Test: all project tasks visible
         task_ids = self.project_task.search(cr, self.user_projectuser_id, [('project_id', '=', pigs_id)])
-        test_task_ids = set([self.task_1_id, self.task_2_id, self.task_3_id, self.task_4_id, self.task_5_id, self.task_6_id])
+        test_task_ids = {self.task_1_id, self.task_2_id, self.task_3_id, self.task_4_id, self.task_5_id, self.task_6_id}
         self.assertEqual(set(task_ids), test_task_ids,
                          'access rights: project user cannot see all tasks of an employees project')
 
@@ -207,7 +207,7 @@ class TestPortalProject(TestPortalProjectBase):
         self.assertRaises(except_orm, self.project_project.read, cr, self.user_projectuser_id, [pigs_id], ['state'])
         # Test: no project task visible
         task_ids = self.project_task.search(cr, self.user_projectuser_id, [('project_id', '=', pigs_id)])
-        test_task_ids = set([self.task_4_id])
+        test_task_ids = {self.task_4_id}
         self.assertEqual(set(task_ids), test_task_ids,
                          'access rights: employee user should not see tasks of a not-followed followers project, only assigned')
 
@@ -218,7 +218,7 @@ class TestPortalProject(TestPortalProjectBase):
         self.assertRaises(except_orm, self.project_project.read, cr, self.user_portal_id, [pigs_id], ['state'])
         # Test: no project task visible
         task_ids = self.project_task.search(cr, self.user_portal_id, [('project_id', '=', pigs_id)])
-        test_task_ids = set([self.task_5_id])
+        test_task_ids = {self.task_5_id}
         self.assertEqual(set(task_ids), test_task_ids,
                          'access rights: portal user should not see tasks of a not-followed followers project, only assigned')
 
@@ -236,7 +236,7 @@ class TestPortalProject(TestPortalProjectBase):
         self.project_project.read(cr, self.user_projectuser_id, [pigs_id], ['state'])
         # Test: followed + assigned tasks visible
         task_ids = self.project_task.search(cr, self.user_projectuser_id, [('project_id', '=', pigs_id)])
-        test_task_ids = set([self.task_1_id, self.task_3_id, self.task_4_id])
+        test_task_ids = {self.task_1_id, self.task_3_id, self.task_4_id}
         self.assertEqual(set(task_ids), test_task_ids,
                          'access rights: employee user should not see followed + assigned tasks of a follower project')
 
@@ -244,7 +244,7 @@ class TestPortalProject(TestPortalProjectBase):
         self.project_project.read(cr, self.user_portal_id, [pigs_id], ['state'])
         # Test: followed + assigned tasks visible
         task_ids = self.project_task.search(cr, self.user_portal_id, [('project_id', '=', pigs_id)])
-        test_task_ids = set([self.task_1_id, self.task_3_id, self.task_5_id])
+        test_task_ids = {self.task_1_id, self.task_3_id, self.task_5_id}
         self.assertEqual(set(task_ids), test_task_ids,
                          'access rights: employee user should not see followed + assigned tasks of a follower project')
 

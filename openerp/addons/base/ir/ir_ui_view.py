@@ -586,7 +586,7 @@ class view(osv.osv):
 
         # arch and model fields are always returned
         if fields:
-            fields = list(set(fields) | set(['arch', 'model']))
+            fields = list(set(fields) | {'arch', 'model'})
 
         # read the view arch
         [view] = self.read(cr, uid, [root_id], fields=fields, context=context)
