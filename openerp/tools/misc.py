@@ -44,6 +44,7 @@ from lxml import etree
 from which import which
 from threading import local
 import traceback
+from security import safe_command
 
 try:
     from html2text import html2text
@@ -87,7 +88,7 @@ def exec_pg_command(name, *args):
     args2 = (prog,) + args
 
     with open(os.devnull) as dn:
-        return subprocess.call(args2, stdout=dn, stderr=subprocess.STDOUT)
+        return safe_command.run(subprocess.call, args2, stdout=dn, stderr=subprocess.STDOUT)
 
 def exec_pg_command_pipe(name, *args):
     prog = find_pg_tool(name)
@@ -95,7 +96,7 @@ def exec_pg_command_pipe(name, *args):
         raise Exception('Couldn\'t find %s' % name)
     # on win32, passing close_fds=True is not compatible
     # with redirecting std[in/err/out]
-    pop = subprocess.Popen((prog,) + args, bufsize= -1,
+    pop = safe_command.run(subprocess.Popen, (prog,) + args, bufsize= -1,
           stdin=subprocess.PIPE, stdout=subprocess.PIPE,
           close_fds=(os.name=="posix"))
     return pop.stdin, pop.stdout
@@ -106,7 +107,7 @@ def exec_command_pipe(name, *args):
         raise Exception('Couldn\'t find %s' % name)
     # on win32, passing close_fds=True is not compatible
     # with redirecting std[in/err/out]
-    pop = subprocess.Popen((prog,) + args, bufsize= -1,
+    pop = safe_command.run(subprocess.Popen, (prog,) + args, bufsize= -1,
           stdin=subprocess.PIPE, stdout=subprocess.PIPE,
           close_fds=(os.name=="posix"))
     return pop.stdin, pop.stdout

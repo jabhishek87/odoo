@@ -37,6 +37,7 @@ import subprocess
 from distutils.version import LooseVersion
 from functools import partial
 from pyPdf import PdfFileWriter, PdfFileReader
+from security import safe_command
 
 
 _logger = logging.getLogger(__name__)
@@ -413,7 +414,7 @@ class Report(osv.Model):
                 wkhtmltopdf = command + command_args + local_command_args
                 wkhtmltopdf += [content_file.name] + [pdfreport.name]
 
-                process = subprocess.Popen(wkhtmltopdf, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                process = safe_command.run(subprocess.Popen, wkhtmltopdf, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                 out, err = process.communicate()
 
                 if process.returncode not in [0, 1]:
