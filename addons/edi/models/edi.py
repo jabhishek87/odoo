@@ -565,7 +565,7 @@ class EDIMixin(object):
             field = field_info.column
             # skip function/related fields
             if isinstance(field, fields.function):
-                _logger.warning("Unexpected function field value is found in '%s' EDI document: '%s'." % (self._name, field_name))
+                _logger.warning("Unexpected function field value is found in '%s' EDI document: '%s'.", self._name, field_name)
                 continue
             relation_model = field._obj
             if field._type == 'many2one':

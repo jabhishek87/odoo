@@ -324,7 +324,7 @@ class Report(osv.Model):
                         pdf = self.pool['ir.attachment'].browse(cr, uid, attach_ids[0]).datas
                         pdf = base64.decodestring(pdf)
                         save_in_attachment['loaded_documents'][record_id] = pdf
-                        _logger.info('The PDF document %s was loaded from the database' % filename)
+                        _logger.info('The PDF document %s was loaded from the database', filename)
                     else:
                         # Mark current document to be saved
                         save_in_attachment[record_id] = filename
@@ -432,7 +432,7 @@ class Report(osv.Model):
                     }
                     self.pool['ir.attachment'].create(cr, uid, attachment)
                     _logger.info('The PDF document %s is now saved in the '
-                                 'database' % attachment['name'])
+                                 'database', attachment['name'])
 
                 pdfreport.seek(0)
                 pdfdocuments.append(pdfreport)

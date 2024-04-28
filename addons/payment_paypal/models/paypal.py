@@ -203,9 +203,7 @@ class TxPaypal(osv.Model):
         invalid_parameters = []
         if data.get('notify_version')[0] != '3.4':
             _logger.warning(
-                'Received a notification from Paypal with version %s instead of 2.6. This could lead to issues when managing it.' %
-                data.get('notify_version')
-            )
+                'Received a notification from Paypal with version %s instead of 2.6. This could lead to issues when managing it.', data.get('notify_version'))
         if data.get('test_ipn'):
             _logger.warning(
                 'Received a notification from Paypal using sandbox'
@@ -240,11 +238,11 @@ class TxPaypal(osv.Model):
             'partner_reference': data.get('payer_id')
         }
         if status in ['Completed', 'Processed']:
-            _logger.info('Validated Paypal payment for tx %s: set as done' % (tx.reference))
+            _logger.info('Validated Paypal payment for tx %s: set as done', (tx.reference))
             data.update(state='done', date_validate=data.get('payment_date', fields.datetime.now()))
             return tx.write(data)
         elif status in ['Pending', 'Expired']:
-            _logger.info('Received notification for Paypal payment %s: set as pending' % (tx.reference))
+            _logger.info('Received notification for Paypal payment %s: set as pending', (tx.reference))
             data.update(state='pending', state_message=data.get('pending_reason', ''))
             return tx.write(data)
         else:
@@ -277,7 +275,7 @@ class TxPaypal(osv.Model):
                 res = e.read()
                 e.close()
                 if tries and res and json.loads(res)['name'] == 'INTERNAL_SERVICE_ERROR':
-                    _logger.warning('Failed contacting Paypal, retrying (%s remaining)' % tries)
+                    _logger.warning('Failed contacting Paypal, retrying (%s remaining)', tries)
             tries = tries - 1
         if not res:
             pass
@@ -369,7 +367,7 @@ class TxPaypal(osv.Model):
         values = json.loads(data)
         status = values.get('state')
         if status in ['approved']:
-            _logger.info('Validated Paypal s2s payment for tx %s: set as done' % (tx.reference))
+            _logger.info('Validated Paypal s2s payment for tx %s: set as done', (tx.reference))
             tx.write({
                 'state': 'done',
                 'date_validate': values.get('udpate_time', fields.datetime.now()),
@@ -377,7 +375,7 @@ class TxPaypal(osv.Model):
             })
             return True
         elif status in ['pending', 'expired']:
-            _logger.info('Received notification for Paypal s2s payment %s: set as pending' % (tx.reference))
+            _logger.info('Received notification for Paypal s2s payment %s: set as pending', (tx.reference))
             tx.write({
                 'state': 'pending',
                 # 'state_message': data.get('pending_reason', ''),

@@ -420,7 +420,7 @@ class calendar_alarm_manager(osv.AbstractModel):
             cron = self.pool['ir.model.data'].get_object(
                 cr, uid, 'calendar', 'ir_cron_scheduler_alarm', context=context)
         except ValueError:
-            _logger.error("Cron for " + self._name + " can not be identified !")
+            _logger.error("Cron for %s can not be identified !", self._name)
             return False
 
         if cron.interval_type == "weeks":

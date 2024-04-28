@@ -164,13 +164,13 @@ class MigrationManager(object):
                         fp2.seek(0)
                         try:
                             mod = imp.load_source(name, pyfile, fp2)
-                            _logger.info('module %(addon)s: Running migration %(version)s %(name)s' % mergedict({'name': mod.__name__}, strfmt))
+                            _logger.info('module %(addon)s: Running migration %(version)s %(name)s', mergedict({'name': mod.__name__}, strfmt))
                             migrate = mod.migrate
                         except ImportError:
                             _logger.exception('module %(addon)s: Unable to load %(stage)s-migration file %(file)s' % mergedict({'file': pyfile}, strfmt))
                             raise
                         except AttributeError:
-                            _logger.error('module %(addon)s: Each %(stage)s-migration file must have a "migrate(cr, installed_version)" function' % strfmt)
+                            _logger.error('module %(addon)s: Each %(stage)s-migration file must have a "migrate(cr, installed_version)" function', strfmt)
                         else:
                             migrate(self.cr, pkg.installed_version)
                     finally:

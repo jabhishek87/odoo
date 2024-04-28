@@ -52,7 +52,7 @@ def LocalService(name):
     be provided too in the future).
     """
     assert openerp.conf.deprecation.allow_local_service
-    _logger.warning("LocalService() is deprecated since march 2013 (it was called with '%s')." % name)
+    _logger.warning("LocalService() is deprecated since march 2013 (it was called with '%s').", name)
 
     if name == 'workflow':
         return openerp.workflow

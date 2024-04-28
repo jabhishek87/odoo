@@ -536,7 +536,7 @@ class mail_thread(osv.AbstractModel):
             for subtype in subtypes:
                 subtype_rec = self.pool.get('ir.model.data').xmlid_to_object(cr, uid, subtype, context=context)
                 if not (subtype_rec and subtype_rec.exists()):
-                    _logger.debug('subtype %s not found' % subtype)
+                    _logger.debug('subtype %s not found', subtype)
                     continue
                 message = format_message(subtype_rec.description if subtype_rec.description else subtype_rec.name, tracked_values)
                 self.message_post(cr, uid, browse_record.id, body=message, subtype=subtype, context=context)

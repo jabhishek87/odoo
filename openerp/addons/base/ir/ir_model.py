@@ -74,7 +74,7 @@ class ir_model(osv.osv):
             if model.model in self.pool:
                 res[model.id] = self.pool[model.model].is_transient()
             else:
-                _logger.error('Missing model %s' % (model.model, ))
+                _logger.error('Missing model %s', model.model)
         return res
 
     def _search_osv_memory(self, cr, uid, model, name, domain, context=None):
@@ -719,7 +719,7 @@ class ir_model_access(osv.osv):
 
         # TransientModel records have no access rights, only an implicit access rule
         if model_name not in self.pool:
-            _logger.error('Missing model %s' % (model_name, ))
+            _logger.error('Missing model %s', model_name)
         elif self.pool[model_name].is_transient():
             return True
 

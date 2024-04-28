@@ -215,7 +215,7 @@ class WebsiteSurvey(http.Controller):
                 if answer_value:
                     dict_soft_update(ret, answer_tag, answer_value)
                 else:
-                    _logger.warning("[survey] No answer has been found for question %s marked as non skipped" % answer_tag)
+                    _logger.warning("[survey] No answer has been found for question %s marked as non skipped", answer_tag)
         return json.dumps(ret)
 
     # AJAX scores loading for quiz correction mode

@@ -58,7 +58,7 @@ class PaypalController(http.Controller):
         elif resp == 'INVALID':
             _logger.warning('Paypal: answered INVALID on data verification')
         else:
-            _logger.warning('Paypal: unrecognized paypal answer, received %s instead of VERIFIED or INVALID' % resp.text)
+            _logger.warning('Paypal: unrecognized paypal answer, received %s instead of VERIFIED or INVALID', resp.text)
         return res
 
     @http.route('/payment/paypal/ipn/', type='http', auth='none', methods=['POST'])
