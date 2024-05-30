@@ -195,7 +195,7 @@ class view(osv.osv):
         # as XML (pretty print)
         arch_no_whitespace = etree.fromstring(
             etree.tostring(arch, encoding='utf-8'),
-            parser=etree.XMLParser(encoding='utf-8', remove_blank_text=True))
+            parser=etree.XMLParser(encoding='utf-8', remove_blank_text=True, resolve_entities=False))
         return etree.tostring(
             arch_no_whitespace, encoding='unicode', pretty_print=True)
 

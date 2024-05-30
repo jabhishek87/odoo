@@ -743,7 +743,7 @@ class test_views(ViewCase):
         self.assertEqual(
             ET.fromstring(
                 view['arch'],
-                parser=ET.XMLParser(remove_blank_text=True)
+                parser=ET.XMLParser(remove_blank_text=True, resolve_entities=False)
             ),
             E.form(
                 E.p("Replacement data"),
@@ -811,7 +811,7 @@ class test_views(ViewCase):
         self.assertEqual(
             ET.fromstring(
                 view['arch'],
-                parser=ET.XMLParser(remove_blank_text=True)
+                parser=ET.XMLParser(remove_blank_text=True, resolve_entities=False)
             ),
             E.form(
                 E.p("Replacement data"),
