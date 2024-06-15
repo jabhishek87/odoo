@@ -10,6 +10,7 @@ from ..models import (
     MAGIC_COLUMNS,
     LOG_ACCESS_COLUMNS,
 )
+import lxml.etree
 
 # extra definitions for backward compatibility
 browse_record_list = BaseModel
@@ -113,7 +114,7 @@ def setup_modifiers(node, field=None, context=None, in_tree_view=False):
 def test_modifiers(what, expected):
     modifiers = {}
     if isinstance(what, basestring):
-        node = etree.fromstring(what)
+        node = etree.fromstring(what, parser=lxml.etree.XMLParser(resolve_entities=False))
         transfer_node_to_modifiers(node, modifiers)
         simplify_modifiers(modifiers)
         json = simplejson.dumps(modifiers)

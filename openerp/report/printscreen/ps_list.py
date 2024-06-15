@@ -30,6 +30,7 @@ import locale
 import time, os
 from operator import itemgetter
 from datetime import datetime
+import lxml.etree
 
 
 class report_printscreen_list(report_int):
@@ -262,7 +263,7 @@ class report_printscreen_list(report_int):
 
         transform = etree.XSLT(
             etree.parse(os.path.join(tools.config['root_path'],
-                                     'addons/base/report/custom_new.xsl')))
+                                     'addons/base/report/custom_new.xsl'), parser=lxml.etree.XMLParser(resolve_entities=False)))
         rml = etree.tostring(transform(new_doc))
         self.obj = render.rml(rml, title=self.title)
         self.obj.render()

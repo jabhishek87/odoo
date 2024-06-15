@@ -8,6 +8,7 @@ from openerp.tools.view_validation import (valid_page_in_book, valid_att_in_form
                                            valid_type_in_col, valid_att_in_field, valid_att_in_label,
                                            valid_field_in_graph, valid_field_in_tree
                                            )
+import lxml.etree
 
 invalid_form = etree.parse(StringIO('''\
 <form>
@@ -30,7 +31,7 @@ invalid_form = etree.parse(StringIO('''\
         </page>
     </notebook>
 </form>
-''')).getroot()
+'''), parser=lxml.etree.XMLParser(resolve_entities=False)).getroot()
 
 valid_form = etree.parse(StringIO('''\
 <form string="">
@@ -50,7 +51,7 @@ valid_form = etree.parse(StringIO('''\
         </page>
     </notebook>
 </form>
-''')).getroot()
+'''), parser=lxml.etree.XMLParser(resolve_entities=False)).getroot()
 
 invalid_graph = etree.parse(StringIO('''\
 <graph>
@@ -62,14 +63,14 @@ invalid_graph = etree.parse(StringIO('''\
         </div>
     </group>
 </graph>
-''')).getroot()
+'''), parser=lxml.etree.XMLParser(resolve_entities=False)).getroot()
 
 valid_graph = etree.parse(StringIO('''\
 <graph string="">
     <field name=""></field>
     <field name=""></field>
 </graph>
-''')).getroot()
+'''), parser=lxml.etree.XMLParser(resolve_entities=False)).getroot()
 
 invalid_tree = etree.parse(StringIO('''\
 <tree>
@@ -80,7 +81,7 @@ invalid_tree = etree.parse(StringIO('''\
     </div>
   </group>
 </tree>
-''')).getroot()
+'''), parser=lxml.etree.XMLParser(resolve_entities=False)).getroot()
 
 valid_tree = etree.parse(StringIO('''\
 <tree string="">
@@ -89,7 +90,7 @@ valid_tree = etree.parse(StringIO('''\
     <button/>
     <field name=""></field>
 </tree>
-''')).getroot()
+'''), parser=lxml.etree.XMLParser(resolve_entities=False)).getroot()
 
 
 class test_view_validation(unittest2.TestCase):

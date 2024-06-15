@@ -11,6 +11,7 @@ from psycopg2 import IntegrityError
 
 from openerp.tests import common
 import openerp.tools
+import lxml.etree
 
 Field = E.field
 
@@ -485,7 +486,7 @@ class TestTemplating(ViewCase):
             self.cr, self.uid, id, fields=['arch'],
             context={'inherit_branding': True})['arch']
 
-        arch = ET.fromstring(arch_string)
+        arch = ET.fromstring(arch_string, parser=lxml.etree.XMLParser(resolve_entities=False))
         Views.distribute_branding(arch)
 
         [initial] = arch.xpath('//item[@order=1]')
@@ -531,7 +532,7 @@ class TestTemplating(ViewCase):
             self.cr, self.uid, id, fields=['arch'],
             context={'inherit_branding': True})['arch']
 
-        arch = ET.fromstring(arch_string)
+        arch = ET.fromstring(arch_string, parser=lxml.etree.XMLParser(resolve_entities=False))
         Views.distribute_branding(arch)
 
         self.assertEqual(
@@ -571,7 +572,7 @@ class TestTemplating(ViewCase):
         arch_string = Views.read_combined(
             self.cr, self.uid, id, fields=['arch'],
             context={'inherit_branding': True})['arch']
-        arch = ET.fromstring(arch_string)
+        arch = ET.fromstring(arch_string, parser=lxml.etree.XMLParser(resolve_entities=False))
         Views.distribute_branding(arch)
 
         self.assertEqual(arch, E.root(E.item(E.span({'t-esc': "foo"}))))
@@ -602,7 +603,7 @@ class TestTemplating(ViewCase):
             self.cr, self.uid, id, fields=['arch'],
             context={'inherit_branding': True})['arch']
 
-        arch = ET.fromstring(arch_string)
+        arch = ET.fromstring(arch_string, parser=lxml.etree.XMLParser(resolve_entities=False))
         Views.distribute_branding(arch)
 
         self.assertEqual(
@@ -1026,7 +1027,7 @@ class TestViewCombined(ViewCase):
     def test_basic_read(self):
         arch = self.read_combined(self.a1)['arch']
         self.assertEqual(
-            ET.fromstring(arch),
+            ET.fromstring(arch, parser=lxml.etree.XMLParser(resolve_entities=False)),
             E.qweb(
                 E.a1(),
                 E.a3(),
@@ -1036,7 +1037,7 @@ class TestViewCombined(ViewCase):
     def test_read_from_child(self):
         arch = self.read_combined(self.a3)['arch']
         self.assertEqual(
-            ET.fromstring(arch),
+            ET.fromstring(arch, parser=lxml.etree.XMLParser(resolve_entities=False)),
             E.qweb(
                 E.a1(),
                 E.a3(),
@@ -1046,7 +1047,7 @@ class TestViewCombined(ViewCase):
     def test_read_from_child_primary(self):
         arch = self.read_combined(self.a4)['arch']
         self.assertEqual(
-            ET.fromstring(arch),
+            ET.fromstring(arch, parser=lxml.etree.XMLParser(resolve_entities=False)),
             E.qweb(
                 E.a1(),
                 E.a4(),
@@ -1057,7 +1058,7 @@ class TestViewCombined(ViewCase):
     def test_cross_model_simple(self):
         arch = self.read_combined(self.c2)['arch']
         self.assertEqual(
-            ET.fromstring(arch),
+            ET.fromstring(arch, parser=lxml.etree.XMLParser(resolve_entities=False)),
             E.qweb(
                 E.a1(),
                 E.c3(),
@@ -1070,7 +1071,7 @@ class TestViewCombined(ViewCase):
     def test_cross_model_double(self):
         arch = self.read_combined(self.d1)['arch']
         self.assertEqual(
-            ET.fromstring(arch),
+            ET.fromstring(arch, parser=lxml.etree.XMLParser(resolve_entities=False)),
             E.qweb(
                 E.a1(),
                 E.d1(),
@@ -1119,7 +1120,7 @@ class TestOptionalViews(ViewCase):
         """
         arch = self.read_combined(self.v0)['arch']
         self.assertEqual(
-            ET.fromstring(arch),
+            ET.fromstring(arch, parser=lxml.etree.XMLParser(resolve_entities=False)),
             E.qweb(
                 E.base(),
                 E.v1(),
@@ -1134,7 +1135,7 @@ class TestOptionalViews(ViewCase):
         self.browse(self.v2).toggle()
         arch = self.read_combined(self.v0)['arch']
         self.assertEqual(
-            ET.fromstring(arch),
+            ET.fromstring(arch, parser=lxml.etree.XMLParser(resolve_entities=False)),
             E.qweb(
                 E.base(),
                 E.v1(),
@@ -1144,7 +1145,7 @@ class TestOptionalViews(ViewCase):
         self.browse(self.v3).toggle()
         arch = self.read_combined(self.v0)['arch']
         self.assertEqual(
-            ET.fromstring(arch),
+            ET.fromstring(arch, parser=lxml.etree.XMLParser(resolve_entities=False)),
             E.qweb(
                 E.base(),
                 E.v1(),
@@ -1155,7 +1156,7 @@ class TestOptionalViews(ViewCase):
         self.browse(self.v2).toggle()
         arch = self.read_combined(self.v0)['arch']
         self.assertEqual(
-            ET.fromstring(arch),
+            ET.fromstring(arch, parser=lxml.etree.XMLParser(resolve_entities=False)),
             E.qweb(
                 E.base(),
                 E.v1(),

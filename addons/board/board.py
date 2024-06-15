@@ -25,6 +25,7 @@ from textwrap import dedent
 
 from openerp import tools
 from openerp.osv import fields, osv
+import lxml.etree
 
 class board_board(osv.osv):
     _name = 'board.board'
@@ -94,7 +95,7 @@ class board_board(osv.osv):
                 return s.encode('utf8')
             return s
 
-        archnode = etree.fromstring(encode(arch))
+        archnode = etree.fromstring(encode(arch), parser=lxml.etree.XMLParser(resolve_entities=False))
         return etree.tostring(remove_unauthorized_children(archnode), pretty_print=True)
 
 
