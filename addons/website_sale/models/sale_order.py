@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-import random
 
 from openerp import SUPERUSER_ID
 from openerp.osv import osv, orm, fields
 from openerp.addons.web.http import request
+import secrets
 
 
 class payment_transaction(orm.Model):
@@ -112,7 +112,7 @@ class sale_order(osv.Model):
         for order in self.browse(cr, uid, ids, context=context):
             s = set(j.id for l in (order.website_order_line or []) for j in (l.product_id.accessory_product_ids or []))
             s -= set(l.product_id.id for l in order.order_line)
-            product_ids = random.sample(s, min(len(s),3))
+            product_ids = secrets.SystemRandom().sample(s, min(len(s),3))
             return self.pool['product.product'].browse(cr, uid, product_ids, context=context)
 
 class website(orm.Model):

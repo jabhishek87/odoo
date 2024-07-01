@@ -3,12 +3,12 @@
 from datetime import datetime
 import difflib
 import lxml
-import random
 
 from openerp import tools
 from openerp import SUPERUSER_ID
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
+import secrets
 
 
 class Blog(osv.Model):
@@ -43,7 +43,7 @@ class BlogPost(osv.Model):
         res = {}
         for blog_post in self.browse(cr, uid, ids, context=context):
             age = datetime.now() - datetime.strptime(blog_post.create_date, tools.DEFAULT_SERVER_DATETIME_FORMAT)
-            res[blog_post.id] = blog_post.visits * (0.5+random.random()) / max(3, age.days)
+            res[blog_post.id] = blog_post.visits * (0.5+secrets.SystemRandom().random()) / max(3, age.days)
         return res
 
     _columns = {

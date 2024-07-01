@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from openerp.osv import fields, osv
-import random
 import re
 import string
 import urllib2
@@ -9,6 +8,7 @@ from openerp import SUPERUSER_ID
 from openerp.tools.translate import _
 from openerp.tools import html2plaintext
 from py_etherpad import EtherpadLiteClient
+import secrets
 
 _logger = logging.getLogger(__name__)
 
@@ -35,7 +35,7 @@ class pad_common(osv.osv_memory):
         pad["server"] = pad["server"].rstrip('/')
         # generate a salt
         s = string.ascii_uppercase + string.digits
-        salt = ''.join([s[random.randint(0, len(s) - 1)] for i in range(10)])
+        salt = ''.join([s[secrets.SystemRandom().randint(0, len(s) - 1)] for i in range(10)])
         #path
         path = '%s-%s-%s' % (cr.dbname.replace('_','-'), self._name, salt)
         # contruct the url

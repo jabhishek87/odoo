@@ -4,7 +4,6 @@ import datetime
 import logging
 import time
 import uuid
-import random
 
 import simplejson
 
@@ -13,6 +12,7 @@ from openerp.http import request
 from openerp.osv import osv, fields
 from openerp.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.addons.bus.bus import TIMEOUT
+import secrets
 
 _logger = logging.getLogger(__name__)
 
@@ -273,7 +273,7 @@ class im_chat_presence(osv.Model):
         if send_notification:
             self.pool['bus.bus'].sendone(cr, uid, (cr.dbname,'im_chat.presence'), {'id': uid, 'im_status': vals['status']})
         # gc : disconnect the users having a too old last_poll. 1 on 100 chance to do it.
-        if random.random() < 0.01:
+        if secrets.SystemRandom().random() < 0.01:
             self.check_users_disconnection(cr, uid, context=context)
         return True
 

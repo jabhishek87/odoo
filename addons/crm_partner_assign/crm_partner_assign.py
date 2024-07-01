@@ -19,11 +19,11 @@
 #
 ##############################################################################
 
-import random
 
 from openerp.addons.base_geolocalize.models.res_partner import geo_find, geo_query_address
 from openerp.osv import osv
 from openerp.osv import fields
+import secrets
 
 
 class res_partner_grade(osv.osv):
@@ -219,8 +219,8 @@ class crm_lead(osv.osv):
                     total_weight += partner.partner_weight
                     toassign.append( (partner.id, total_weight) )
 
-                random.shuffle(toassign) # avoid always giving the leads to the first ones in db natural order!
-                nearest_weight = random.randint(0, total_weight)
+                secrets.SystemRandom().shuffle(toassign) # avoid always giving the leads to the first ones in db natural order!
+                nearest_weight = secrets.SystemRandom().randint(0, total_weight)
                 for partner_id, weight in toassign:
                     if nearest_weight <= weight:
                         res_partner_ids[lead.id] = partner_id

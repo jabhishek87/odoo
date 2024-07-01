@@ -19,7 +19,6 @@
 #
 ##############################################################################
 import logging
-import random
 import time
 import uuid
 from openerp import SUPERUSER_ID
@@ -33,6 +32,8 @@ from openerp.osv import expression
 from openerp.tools.translate import _
 from openerp.tools.safe_eval import safe_eval
 import openerp
+import secrets
+
 _logger = logging.getLogger(__name__)
 
 FULL_ACCESS = ('perm_read', 'perm_write', 'perm_create', 'perm_unlink')
@@ -47,7 +48,7 @@ DOMAIN_ALL = [(1, '=', 1)]
 # A good selection of easy to read password characters (e.g. no '0' vs 'O', etc.)
 RANDOM_PASS_CHARACTERS = 'aaaabcdeeeefghjkmnpqrstuvwxyzAAAABCDEEEEFGHJKLMNPQRSTUVWXYZ23456789'
 def generate_random_pass():
-    return ''.join(random.sample(RANDOM_PASS_CHARACTERS,10))
+    return ''.join(secrets.SystemRandom().sample(RANDOM_PASS_CHARACTERS,10))
 
 class share_wizard(osv.TransientModel):
     _name = 'share.wizard'

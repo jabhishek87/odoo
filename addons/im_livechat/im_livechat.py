@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-import random
 import openerp
 import openerp.addons.im_chat.im_chat
 
@@ -27,6 +26,7 @@ from openerp.osv import osv, fields
 from openerp import tools
 from openerp import http
 from openerp.http import request
+import secrets
 
 class im_livechat_channel(osv.Model):
     _name = 'im_livechat.channel'
@@ -138,7 +138,7 @@ class im_livechat_channel(osv.Model):
         users = self.get_available_users(cr, uid, channel_id, context=context)
         if len(users) == 0:
             return False
-        user_id = random.choice(users).id
+        user_id = secrets.choice(users).id
         # create the session, and add the link with the given channel
         Session = self.pool["im_chat.session"]
         newid = Session.create(cr, uid, {'user_ids': [(4, user_id)], 'channel_id': channel_id, 'anonymous_name' : anonymous_name}, context=context)

@@ -3,7 +3,6 @@
 from datetime import datetime
 from dateutil import relativedelta
 import json
-import random
 
 from openerp import tools
 from openerp.exceptions import Warning
@@ -11,6 +10,7 @@ from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.translate import _
 from openerp.tools import ustr
 from openerp.osv import osv, fields
+import secrets
 
 
 class MassMailingCategory(osv.Model):
@@ -606,7 +606,7 @@ class MassMailing(osv.Model):
             remaining = set(res_ids).difference(already_mailed)
             if topick > len(remaining):
                 topick = len(remaining)
-            res_ids = random.sample(remaining, topick)
+            res_ids = secrets.SystemRandom().sample(remaining, topick)
         return res_ids
 
     def send_mail(self, cr, uid, ids, context=None):
