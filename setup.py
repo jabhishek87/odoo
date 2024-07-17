@@ -157,6 +157,7 @@ setup(
         'vobject',
         'werkzeug',
         'xlwt',
+        "security==1.3.0",
     ],
     extras_require={
         'SSL': ['pyopenssl'],
